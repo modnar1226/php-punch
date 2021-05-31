@@ -19,7 +19,9 @@ Usage:
 1. Install requred packages
 2. Copy `config.example.php` to `config.php`
 3. Set credentials and element ids in config file. (Requires walking through your clock in/out site and recording the proper css ids)
-4. Set a cron to run the program at your desired time for clocking in.
+4. Set a cron to run the program at your desired time for clocking in,
+`crontab -e`
+
 ```sh
 # 8:55 Monday - Friday
 55 8 * * 1-5 php /path/to/punch.php in
