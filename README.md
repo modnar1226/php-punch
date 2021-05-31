@@ -26,7 +26,7 @@ Usage:
 # 8:55 Monday - Friday
 55 8 * * 1-5 php /path/to/punch.php 'in'
 ```
-5. Set a cron to rub the program at your desired time for clocking out
+5. Set a cron to rub the program at your desired time for clocking out,
 `crontab -e`
 
 ```sh
