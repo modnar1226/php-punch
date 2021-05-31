@@ -1,6 +1,8 @@
 <?php
 namespace Punch;
 
+use Punch\Holiday;
+
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 
@@ -50,5 +52,14 @@ abstract class Punchable
 
         // Logout
         $logoutBtn->click();
+    }
+
+    protected function isTodayAHoliday(Holiday $holiday)
+    {
+        if ($holiday instanceof Skippable) {
+            return date('d-m-Y') === $holiday::$date;
+        } else {
+            throw new \Exception("The object Holiday must interface Skippable", 1);
+        }
     }
 }

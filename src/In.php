@@ -13,6 +13,6 @@ class In Extends Login implements Runable
         );
 
         // Click the element to login
-        //$in->click();
+        $in->click();
     }
 }

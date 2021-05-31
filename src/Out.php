@@ -14,6 +14,6 @@ class Out implements Runable
         );
 
         // Click the element to logout
-        //$out->click();
+        $out->click();
     }
 }
