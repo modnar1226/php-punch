@@ -17,12 +17,15 @@ Requires:
 
 Usage:
 1. Install requred packages
-2. Set credentials and element ids in config file. (Requires walking through your clock in/out site and recording the proper css ids)
-3. Set a cron to run the program at your desired time for clocking in.
+2. Copy `config.example.php` to `config.php`
+3. Set credentials and element ids in config file. (Requires walking through your clock in/out site and recording the proper css ids)
+4. Set a cron to run the program at your desired time for clocking in.
+```sh
+# 8:55 Monday - Friday
+55 8 * * 1-5 php /path/to/punch.php in
 ```
-php /path/to/punch.php in
-```
-4. Set a cron to rub the program at your desired time for clocking out
-```
-php /path/to/punch.php out
+5. Set a cron to rub the program at your desired time for clocking out
+```sh
+# 4:58 Monday - Friday
+58 16 * * 1-5 php /path/to/punch.php out
 ```
