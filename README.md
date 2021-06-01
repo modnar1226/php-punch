@@ -29,12 +29,12 @@ Usage:
 
 ```sh
 # 8:55 am Monday - Friday, script default is a 5 minute range from this time
-55 8 * * 1-5 php /path/to/punch.php 'in' > /path/to/time_sheet.txt
+55 8 * * 1-5 php /path/to/punch.php 'in' >> /path/to/time_sheet.txt
 ```
 5. Set a cron to run the program at your desired time for clocking out,
 `crontab -e`
 
 ```sh
 # 5:00 pm Monday - Friday, script default is a 5 minute range from this time
-00 17 * * 1-5 php /path/to/punch.php 'out' > /path/to/time_sheet.txt
+00 17 * * 1-5 php /path/to/punch.php 'out' >> /path/to/time_sheet.txt
 ```
