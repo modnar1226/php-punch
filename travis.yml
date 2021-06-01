@@ -9,7 +9,7 @@ env:
 addons:
   chrome: stable
 before_install:
-  - # start your web application and listen on `localhost`
+  # start your web application and listen on `localhost`
   - google-chrome-stable --headless --disable-gpu http://localhost &
 install:
   - composer install
