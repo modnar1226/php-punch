@@ -1,8 +1,13 @@
 language: php
 php:
   - '7.4'
-  - '8.0'
-branches:
-  only: master
+env:
+  global:
+    - CHROME_DRIVER_VERSION=`curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE`
+    - SELENIUM_STANDALONE_VERSION=3.9.1
+    - SELENIUM_SUBDIR=$(echo "$SELENIUM_STANDALONE_VERSION" | cut -d"." -f-2)
 install:
-  - sudo apt-get update && sudo apt-get -y chrome chromdriver
+  - composer install
+  - sudo apt-get update
+  - sudo apt-get install -y unzip openjdk-8-jre-headless xvfb libxi6 libgconf-2-4
+  - echo $TRAVIS_BUILD_DIR
