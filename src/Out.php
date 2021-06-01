@@ -1,7 +1,7 @@
 <?php
 namespace Punch;
 
-use \Punch\Runable;
+use Punch\Runable;
 use Facebook\WebDriver\WebDriverBy;
 
 class Out implements Runable

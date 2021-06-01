@@ -1,8 +1,21 @@
 language: php
 php:
-  - '5.6'
   - '7.4'
-  - '8.0'
-before_install: composer install --dev
-branches:
-  only: master
+env:
+  global:
+    - CHROME_DRIVER_VERSION=`curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE`
+    - SELENIUM_STANDALONE_VERSION=3.9.1
+    - SELENIUM_SUBDIR=$(echo "$SELENIUM_STANDALONE_VERSION" | cut -d"." -f-2)
+addons:
+  chrome: stable
+before_install:
+  - # start your web application and listen on `localhost`
+  - google-chrome-stable --headless --disable-gpu http://localhost &
+install:
+  - composer install
+  - sudo apt-get -y install unzip
+  - wget -N https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip -P ~/
+  - unzip ~/chromedriver_linux64.zip -d ~/
+  - rm ~/chromedriver_linux64.zip
+  - sudo mv -f ~/chromedriver /usr/local/bin/chromedriver
+  - sudo chown root:root /usr/local/bin/chromedriver
