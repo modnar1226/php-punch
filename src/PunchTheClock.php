@@ -7,6 +7,7 @@ use \Punch\Out;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
+use Symfony\Component\Process\Process;
 
 class PunchTheClock extends Punchable
 {
@@ -18,8 +19,9 @@ class PunchTheClock extends Punchable
         'out', 'Out', 'OUT', 'fuera', 'Fuera', 'FUERA'
     );
 
-    private $serverUrl = 'http://localhost:4444';
+    private $serverUrl = 'http://localhost:9515';
     private $driver = null;
+    private $process = null;
 
     public function __construct()
     {
@@ -28,6 +30,12 @@ class PunchTheClock extends Punchable
             // Exit if returns true
             ($this->isTodayAHoliday(Holiday::set($label, $date)) === true) ? exit() : null ;
         }
+        if (DEBUG) {
+            echo '"DEBUG","Its not a holiday, we need to clock in."' . "\n";
+        }
+
+        $this->process = new Process(['chromedriver']);
+        $this->process->start();
 
         // Create an instance of ChromeOptions:
         $chromeOptions = new ChromeOptions();
@@ -50,6 +58,9 @@ class PunchTheClock extends Punchable
 
             // Wait to simulate human error, between 0 seconds and either the users input or a max of MAX_WAIT in seconds
             $timeToWait = (!empty($_SERVER['argv'][2]) && is_numeric($_SERVER['argv'][2])) ? $_SERVER['argv'][2] : MAX_WAIT;
+            if (DEBUG) {
+                echo '"DEBUG","Time to wait: '. $timeToWait . '"' . "\n";
+            }
             sleep(rand(0, $timeToWait));
 
             $this->punch($direction);
@@ -60,12 +71,23 @@ class PunchTheClock extends Punchable
 
     protected function punch($direction)
     {
+        if (DEBUG) {
+            echo '"DEBUG","Loading url: ' . CLOCK_URL . '"' . "\n";
+        }
         $this->driver->get(CLOCK_URL);
 
+        if (DEBUG) {
+            echo '"DEBUG","Logging in."' . "\n";
+        }
+        // Check user input & login
         // common login for both scenarios
         $this->login($this->driver);
 
         // Check user input & login
+        if (DEBUG) {
+            echo '"DEBUG","Clocking In or Out?: ' . $direction . '"' . "\n";
+        }
+
         if (in_array($direction, self::IN)) {
             IN::run($this->driver);
         }
@@ -75,6 +97,9 @@ class PunchTheClock extends Punchable
             OUT::run($this->driver);
         }
 
+        if (DEBUG) {
+            echo '"DEBUG","Logging out."' . "\n";
+        }
         // common logout for both scenarios
         $this->logout($this->driver);
     }
@@ -82,8 +107,15 @@ class PunchTheClock extends Punchable
     public function __destruct()
     {
         if ($this->driver !== null) {
+            if (DEBUG) {
+                echo '"DEBUG","Closing the browser."' . "\n";
+            }
             // close the browser
             $this->driver->quit();
+        }
+        
+        if ($this->process !== null) {
+            $this->process->stop();
         }
     }
 }

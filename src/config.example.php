@@ -31,6 +31,10 @@ define('CLOCK_PUNCH_OUT_ID', '');
 define('CLOCK_PUNCH_VERIFY_LOGIN_ID', '');
 
 define('MAX_WAIT', 300);
+// echo text in csv format.
+define('TIMESHEET',true);
+// echo more detail about steps taken
+define('DEBUG', false);
 
 // Generates a list of common holidays that may fall during a work week
 // Customize as neccesary

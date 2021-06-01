@@ -14,5 +14,8 @@ class In Extends Login implements Runable
 
         // Click the element to login
         $in->click();
+        if (TIMESHEET) { // update to be a config cost for debug/ output/ time sheet
+            echo '"Clocked In","' . date('h:m a') . '"' . "\n";
+        }
     }
 }
