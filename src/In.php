@@ -4,7 +4,7 @@ namespace Punch;
 use \Punch\Runable;
 use Facebook\WebDriver\WebDriverBy;
 
-class In Extends Login implements Runable
+class In implements Runable
 {
     public static function run($driver)
     {

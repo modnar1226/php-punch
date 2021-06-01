@@ -10,7 +10,7 @@ Features:
 2. Run as a cron job to clock in or out.
 3. Skips holidays.
 4. Randomizes time period (within a range) that you clock in or out.
-5. Outout can be saved as a back up of the punches, outout it delimited by double quotes (") and field separated by commas (,) ie, csv format
+5. Output can be saved as a back up of the punches, output is delimited by double quotes (") and field separated by commas (,) ie, csv format
 
 Requires:
 1. Composer 
