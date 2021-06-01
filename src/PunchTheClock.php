@@ -1,13 +1,15 @@
 <?php
 namespace Punch;
 
-use \Punch\Punchable;
-use \Punch\In;
-use \Punch\Out;
+use Punch\Punchable;
+use Punch\In;
+use Punch\Out;
+use Punch\Login;
+use Punch\Logout;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
-use Symfony\Component\Process\Process;
+use Facebook\WebDriver\Exception\NoSuchElementException;
 
 class PunchTheClock extends Punchable
 {
@@ -21,7 +23,6 @@ class PunchTheClock extends Punchable
 
     private $serverUrl = 'http://localhost:9515';
     private $driver = null;
-    private $process = null;
 
     public function __construct()
     {
@@ -39,11 +40,8 @@ class PunchTheClock extends Punchable
         }
 
         if (DEBUG) {
-            echo '"DEBUG","Its not a holiday, we need to clock in."' . "\n";
+            echo '"DEBUG","Its not a holiday, we need to punch the clock"' . "\n";
         }
-
-        $this->process = new Process(['chromedriver']);
-        $this->process->start();
 
         // Create an instance of ChromeOptions:
         $chromeOptions = new ChromeOptions();
@@ -71,7 +69,13 @@ class PunchTheClock extends Punchable
         }
         sleep(rand(0, $timeToWait));
 
-        $this->punch($direction);
+        try {
+            $this->punch($direction);
+        } catch (NoSuchElementException $th) {
+            // Can't use exit here. The __destruct method will still fire. 
+            // The webdriver automaticaly shuts down on an error of this type.
+            echo'"ERROR","An element was not found during the punch process. Please verify the element ids used to log in and out, as well as the buttons used to punch"' . "\n";
+        }
     }
 
     protected function punch($direction)
@@ -86,27 +90,23 @@ class PunchTheClock extends Punchable
         }
         // Check user input & login
         // common login for both scenarios
-        $this->login($this->driver);
+        Login::run($this->driver);
 
         // Check user input & login
         if (DEBUG) {
             echo '"DEBUG","Clocking In or Out?: ' . $direction . '"' . "\n";
         }
 
-        if (in_array($direction, self::IN)) {
-            IN::run($this->driver);
-        }
-
-        // Check user input & logout
-        if (in_array($direction, self::OUT)) {
-            OUT::run($this->driver);
-        }
+        // punch in 
+        in_array($direction, self::IN) ? In::run($this->driver) : null;
+        // or punch out
+        in_array($direction, self::OUT) ? Out::run($this->driver) : null;
 
         if (DEBUG) {
             echo '"DEBUG","Logging out."' . "\n";
         }
         // common logout for both scenarios
-        $this->logout($this->driver);
+        Logout::run($this->driver);
     }
 
     public function __destruct()
@@ -117,10 +117,6 @@ class PunchTheClock extends Punchable
             }
             // close the browser
             $this->driver->quit();
-        }
-        
-        if ($this->process !== null) {
-            $this->process->stop();
         }
     }
 }

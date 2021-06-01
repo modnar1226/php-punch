@@ -1,9 +1,9 @@
 <?php
 namespace Punch;
 
-use \Punch\Skippable;
+use Punch\Skipable;
 
-class Holiday implements Skippable
+class Holiday implements Skipable
 {
     public static $label = '';
     public static $date = '';
