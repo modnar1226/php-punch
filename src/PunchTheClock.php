@@ -25,11 +25,19 @@ class PunchTheClock extends Punchable
 
     public function __construct()
     {
+        if (empty($_SERVER['argv'][1])) {
+            throw new \Exception("You must provide a direction in which to punch! (In or Out?)", 1);
+        }
+
+        if (DEBUG) {
+            echo '"DEBUG","Checking for holidays..."' . "\n";
+        }
         // Check for holidays first, no need to punch anything if we're off today!
         foreach (HOLIDAYS as $label => $date) {
-            // Exit if returns true
-            ($this->isTodayAHoliday(Holiday::set($label, $date)) === true) ? exit() : null ;
+            // Exit with a message about the holiday if returns true
+            ($this->isTodayAHoliday(Holiday::set($label, $date)) === true) ? exit('"Holiday","Today '.date('m/d/Y').' is '.$label.'"'."\n") : null ;
         }
+
         if (DEBUG) {
             echo '"DEBUG","Its not a holiday, we need to clock in."' . "\n";
         }
@@ -52,21 +60,18 @@ class PunchTheClock extends Punchable
         // Start Chrome
         $this->driver = RemoteWebDriver::create($this->serverUrl, $capabilities);
 
-        if (!empty($_SERVER['argv'][1])) {
-            // Gets the punch direction user input, in or out
-            $direction = $_SERVER['argv'][1];
+        
+        // Gets the punch direction user input, in or out
+        $direction = $_SERVER['argv'][1];
 
-            // Wait to simulate human error, between 0 seconds and either the users input or a max of MAX_WAIT in seconds
-            $timeToWait = (!empty($_SERVER['argv'][2]) && is_numeric($_SERVER['argv'][2])) ? $_SERVER['argv'][2] : MAX_WAIT;
-            if (DEBUG) {
-                echo '"DEBUG","Time to wait: '. $timeToWait . '"' . "\n";
-            }
-            sleep(rand(0, $timeToWait));
-
-            $this->punch($direction);
-        } else {
-            throw new \Exception("You must provide a direction in which to punch! (In or Out?)", 1);
+        // Wait to simulate human error, between 0 seconds and either the users input or a max of MAX_WAIT in seconds
+        $timeToWait = (!empty($_SERVER['argv'][2]) && is_numeric($_SERVER['argv'][2])) ? $_SERVER['argv'][2] : MAX_WAIT;
+        if (DEBUG) {
+            echo '"DEBUG","Time to wait: '. $timeToWait . '"' . "\n";
         }
+        sleep(rand(0, $timeToWait));
+
+        $this->punch($direction);
     }
 
     protected function punch($direction)
