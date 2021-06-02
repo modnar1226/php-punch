@@ -7,10 +7,10 @@ $classLoader->addPsr4("Punch\\", __DIR__, true);
 $classLoader->register();
 
 // Web site url used to clock in or out
-define('CLOCK_URL', 'https://google.com'); // TODO: add an php webpage example to use in ci testing, this would point to that container
+define('CLOCK_URL', 'http://localhost/');
 
 // User credentials
-define('CLOCK_USER', 'test');
+define('CLOCK_USER', 'username');
 define('CLOCK_PASS', 'password');
 
 // css ids of the username, password, and log in/out buttons on the web page
@@ -28,9 +28,9 @@ define('CLOCK_PUNCH_VERIFY_LOGIN_ID', 'user_dropdown');
 
 define('MAX_WAIT', 300);
 // echo text in csv format.
-define('TIMESHEET',true);
+define('TIMESHEET',false);
 // echo more detail about steps taken
-define('DEBUG', true);
+define('DEBUG', false);
 
 // Generates a list of common holidays that may fall during a work week
 // Customize as neccesary

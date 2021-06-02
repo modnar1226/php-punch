@@ -13,22 +13,12 @@ use Facebook\WebDriver\Exception\NoSuchElementException;
 
 class PunchTheClock extends Punchable
 {
-    const IN = array(
-        'in', 'In', 'IN', 'en', 'En', 'EN'
-    );
-
-    const OUT = array(
-        'out', 'Out', 'OUT', 'fuera', 'Fuera', 'FUERA'
-    );
-
     private $serverUrl = 'http://localhost:9515';
     private $driver = null;
 
     public function __construct()
     {
-        if (empty($_SERVER['argv'][1])) {
-            throw new \Exception("You must provide a direction in which to punch! (In or Out?)", 1);
-        }
+        $this->validate($_SERVER['argv']);
 
         if (DEBUG) {
             echo '"DEBUG","Checking for holidays..."' . "\n";
@@ -69,13 +59,7 @@ class PunchTheClock extends Punchable
         }
         sleep(rand(0, $timeToWait));
 
-        try {
-            $this->punch($direction);
-        } catch (NoSuchElementException $th) {
-            // Can't use exit here. The __destruct method will still fire. 
-            // The webdriver automaticaly shuts down on an error of this type.
-            echo'"ERROR","An element was not found during the punch process. Please verify the element ids used to log in and out, as well as the buttons used to punch"' . "\n";
-        }
+        $this->punch($direction);
     }
 
     protected function punch($direction)
