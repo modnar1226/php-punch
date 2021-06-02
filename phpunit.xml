@@ -1,6 +1,6 @@
 <phpunit bootstrap="./src/config.example.php">
   <testsuites>
-    <testsuite name="all">
+    <testsuite name="happy_path">
       <directory>./tests</directory>
     </testsuite>
   </testsuites>
