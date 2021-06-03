@@ -16,7 +16,7 @@ class Out implements Runable
         // Click the element to logout
         $out->click();
         if (TIMESHEET) { // update to be a config cost for debug/ output/ time sheet
-            echo '"Clocked Out","' . date('m/d/Y h:m a') . '"' . "\n";
+            echo '"Clocked Out","' . date(self::PUNCH_TIME_SHEET_FORMAT) . '"' . "\n";
         }
     }
 }
