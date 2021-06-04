@@ -52,12 +52,16 @@ class PunchTheClock extends Punchable
         // Gets the punch direction user input, in or out
         $direction = $_SERVER['argv'][1];
 
-        // Wait to simulate human error, between 0 seconds and either the users input or a max of MAX_WAIT in seconds
-        $timeToWait = (!empty($_SERVER['argv'][2]) && is_numeric($_SERVER['argv'][2])) ? $_SERVER['argv'][2] : MAX_WAIT;
+        // Wait to simulate human error, between 0 min and either the users input or a max of MAX_WAIT in min
+        $timeToWait = (!empty($_SERVER['argv'][2]) && is_numeric($_SERVER['argv'][2])) ? ($_SERVER['argv'][2]) : MAX_WAIT;
         if (DEBUG) {
             echo '"DEBUG","Time to wait: '. $timeToWait . '"' . "\n";
         }
-        sleep(rand(0, $timeToWait));
+
+        // multiply the time to wait by 60 to get number of seconds.
+        // randomly picking the number of seconds allows for too much variation on the minute of punch.
+        // anything between 0-60 seconds is still in the same minute, and kind of pointless
+        sleep(mt_rand(0, ($timeToWait * 60)));
 
         $this->punch($direction);
     }
