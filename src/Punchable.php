@@ -2,6 +2,7 @@
 namespace Punch;
 
 use Punch\Holiday;
+use Punch\PaidTimeOff;
 
 abstract class Punchable
 {
@@ -19,6 +20,15 @@ abstract class Punchable
     {
         if ($holiday instanceof Skipable) {
             return date('d-m-Y') === $holiday::$date;
+        } else {
+            throw new \Exception("The object Holiday must interface " . Skipable::class, 1);
+        }
+    }
+
+    protected function isUsingPaidTImeOff(PaidTimeOff $pto)
+    {
+        if ($pto instanceof Skipable) {
+            return date('d-m-Y') === $pto::$date;
         } else {
             throw new \Exception("The object Holiday must interface " . Skipable::class, 1);
         }

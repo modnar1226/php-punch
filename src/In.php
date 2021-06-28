@@ -14,7 +14,7 @@ class In implements Runable
 
         // Click the element to login
         $in->click();
-        if (TIMESHEET) { // update to be a config cost for debug/ output/ time sheet
+        if (TIMESHEET) { // update to be a config const for debug/ output/ time sheet
             echo '"Clocked In","' . date(self::PUNCH_TIME_SHEET_FORMAT) . '"' . "\n";
         }
     }

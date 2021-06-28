@@ -6,6 +6,8 @@ use Punch\In;
 use Punch\Out;
 use Punch\Login;
 use Punch\Logout;
+use Punch\Holiday;
+use Punch\PaidTimeOff;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
@@ -26,11 +28,25 @@ class PunchTheClock extends Punchable
         // Check for holidays first, no need to punch anything if we're off today!
         foreach (HOLIDAYS as $label => $date) {
             // Exit with a message about the holiday if returns true
-            ($this->isTodayAHoliday(Holiday::set($label, $date)) === true) ? exit('"Holiday","Today '.date('m/d/Y').' is '.$label.'"'."\n") : null ;
+            ($this->isTodayAHoliday(Holiday::set($date, $label)) === true)
+            ? exit(
+                '"Holiday","Today '.date('m/d/Y').' is '.$label.'"'."\n"
+            )
+            : null ;
+        }
+
+        // Check for planned days off
+        foreach (PAID_TIME_OFF_DAYS as $date) {
+            // Exit with a message about the PTO day off if returns true
+            ($this->isUsingPaidTImeOff(PaidTimeOff::set($date)) === true)
+            ? exit(
+                '"' . PaidTimeOff::$label . '","Today ' . date('m/d/Y') . ' we are using ' . PaidTimeOff::$label . '"' . "\n"
+            )
+            : null;
         }
 
         if (DEBUG) {
-            echo '"DEBUG","Its not a holiday, we need to punch the clock"' . "\n";
+            echo '"DEBUG","Its not a holiday nor are we using Paid Time Off, we need to punch the clock"' . "\n";
         }
 
         // Create an instance of ChromeOptions:
