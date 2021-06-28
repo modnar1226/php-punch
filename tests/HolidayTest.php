@@ -8,7 +8,7 @@ class HolidayTest extends TestCase
 {
     public function testSet()
     {
-        $holiday = Holiday::set('Holiday', date('d-m-Y'));
+        $holiday = Holiday::set(date('d-m-Y'), 'Holiday');
         $this->assertInstanceOf(Skipable::class, $holiday);
         return $holiday;
     }
@@ -18,7 +18,7 @@ class HolidayTest extends TestCase
      */
     public function testRead(Holiday $holiday)
     {
-        $this->assertTrue($holiday::$label === 'Holiday');
         $this->assertTrue($holiday::$date === date('d-m-Y'));
+        $this->assertTrue($holiday::$label === 'Holiday');
     }
 }
