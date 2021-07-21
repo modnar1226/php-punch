@@ -56,7 +56,7 @@ Name[en_US]=ClockIn
 [Desktop Entry]
 Comment=Clock Out and log in time sheet
 Icon=alarm-clock
-Exec=sh -c "php /home/ian/php-punch/punch.php 'out' 0 >> /home/ian/Desktop/timesheet.txt"
+Exec=sh -c "php /home/username/php-punch/punch.php 'out' 0 >> /home/username/Desktop/timesheet.txt"
 Terminal=false
 Type=Application
 Name[en_US]=ClockOut
