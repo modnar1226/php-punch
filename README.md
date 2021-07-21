@@ -10,8 +10,9 @@ Features:
 1. Selenium webdriver based commands.
 2. Run as a cron job to clock in or out.
 3. Skips holidays.
-4. Randomizes time period (within a range) that you clock in or out.
-5. Output can be saved as a back up of the punches, output is delimited by double quotes (") and field separated by commas (,) ie, csv format
+4. Customizable PTO/ Paid Time Off array to skip defined dates.
+5. Randomizes time period (within a range) that you clock in or out.
+6. Output can be saved as a back up of the punches, output is delimited by double quotes (") and field separated by commas (,) ie, csv format
 
 Requires:
 1. Composer 
@@ -38,3 +39,25 @@ Usage:
 # 5:00 pm Monday - Friday, script default is a 5 minute range from this time
 00 17 * * 1-5 php /path/to/punch.php 'out' >> /path/to/time_sheet.txt
 ```
+
+5. You can even create a desktop button to run the clock in sequence immediately (tested on ubuntu 18) with a .desktop file. Create a new file and add the following:
+```
+[Desktop Entry]
+Comment=Clock In and log in time sheet
+Icon=alarm-clock
+Exec=sh -c "php /home/username/php-punch/punch.php 'in' 0 >> /home/username/Desktop/timesheet.txt"
+Terminal=false
+Type=Application
+Name[en_US]=ClockIn
+```
+
+6. To clock out create a new desktop file and add the following:
+```
+[Desktop Entry]
+Comment=Clock Out and log in time sheet
+Icon=alarm-clock
+Exec=sh -c "php /home/ian/php-punch/punch.php 'out' 0 >> /home/ian/Desktop/timesheet.txt"
+Terminal=false
+Type=Application
+Name[en_US]=ClockOut
+``` 
