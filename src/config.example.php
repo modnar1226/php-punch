@@ -32,15 +32,31 @@ define('TIMESHEET',false);
 // echo more detail about steps taken
 define('DEBUG', false);
 
-// Generates a list of common holidays that may fall during a work week
-// Customize as neccesary
+//define whether to observe holidays
+define('OBSERVE_HOLIDAYS', true);
+
 $currentYear = date("Y");
 $dateFormat = 'd-m-Y';
+$independenceDayTime = strtotime("07/04/$currentYear");
+
+if (OBSERVE_HOLIDAYS) {
+    // function to determine if forth of july is on a sunday.
+    $isTheFourthOfJulyOnSunday = function ($time) {
+        return ((int) date('N', $time) === 7);
+    };
+    
+    if ($isTheFourthOfJulyOnSunday($independenceDayTime)) {
+        $independenceDayTime = strtotime("07/05/$currentYear");
+    }
+}
+
+// Generates a list of common holidays that may fall during a work week
+// Customize as neccesary
 define('HOLIDAYS', array(
     //'New Years Day'    => date($dateFormat, strtotime("01/01/$currentYear")),
     //'MLK Day'          => date($dateFormat, strtotime("third monday of January $currentYear")),
     //'Memorial Day'     => date($dateFormat, strtotime("last monday of May $currentYear")),
-    //'Independence Day' => date($dateFormat, strtotime("07/04/$currentYear")),
+    //'Independence Day' => date($dateFormat, $independenceDayTime),
     //'Labor Day'        => date($dateFormat, strtotime("first monday of September $currentYear")),
     //'Veterans Day'     => date($dateFormat, strtotime("11/11/$currentYear")),
     //'Columbus Day'     => date($dateFormat, strtotime("second monday of October $currentYear")),
@@ -55,3 +71,4 @@ define('PAID_TIME_OFF_DAYS', array(
 
 // Remove these from memory
 unset($dateFormat);
+unset($independenceDayTime);
