@@ -4,6 +4,7 @@ namespace Punch;
 use Punch\Runable;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Exception\WebDriverException;
+use Punch\Output;
 
 class In implements Runable
 {

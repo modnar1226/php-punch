@@ -60,7 +60,7 @@ define('HOLIDAYS', array(
     //'Labor Day'        => date($dateFormat, strtotime("first monday of September $currentYear")),
     //'Veterans Day'     => date($dateFormat, strtotime("11/11/$currentYear")),
     //'Columbus Day'     => date($dateFormat, strtotime("second monday of October $currentYear")),
-    //'Thanksgiving Day' => date($dateFormat, strtotime("fourth thursday of Novemeber $currentYear")),
+    //'Thanksgiving Day' => date($dateFormat, strtotime("fourth thursday of November $currentYear")),
     //'Christmas Day'    => date($dateFormat, strtotime("12/25/$currentYear"))
 ));
 unset($currentYear);
