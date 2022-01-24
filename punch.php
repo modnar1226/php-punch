@@ -5,8 +5,13 @@ use \Punch\PunchTheClock;
 use Symfony\Component\Process\Process;
 
 $process = new Process(['chromedriver']);
-$process->start();
-
-new PunchTheClock();
-
-$process->stop();
+try {
+    $process->start();
+    
+    new PunchTheClock();
+    
+    $process->stop();
+} catch (\Throwable $th) {
+    // log the error in the timesheet file
+    echo '"ERROR","'. $th->message .'"' . "\n";
+}

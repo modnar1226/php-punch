@@ -69,7 +69,7 @@ class PunchTheClock extends Punchable
         $direction = $_SERVER['argv'][1];
 
         // Wait to simulate human error, between 0 min and either the users input or a max of MAX_WAIT in min
-        $timeToWait = ($_SERVER['argv'][2] !== null && is_numeric($_SERVER['argv'][2]) ? $_SERVER['argv'][2] : MAX_WAIT);
+        $timeToWait = (((isset($_SERVER['argv'][2])) && $_SERVER['argv'][2] !== null && is_numeric($_SERVER['argv'][2])) ? $_SERVER['argv'][2] : MAX_WAIT);
         if (DEBUG) {
             echo '"DEBUG","Is input not empty: '. !empty($_SERVER['argv'][2]) . '"' . "\n";
             echo '"DEBUG","Time to wait input: '. $_SERVER['argv'][2] . '"' . "\n";
