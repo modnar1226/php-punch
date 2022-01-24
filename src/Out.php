@@ -17,7 +17,7 @@ class Out implements Runable
             );
     
             // Click the element to logout
-            //$out->click();
+            $out->click();
             if (TIMESHEET) { // update to be a config const for debug/ output/ time sheet
                 Output::print(
                     'Clocked Out',
