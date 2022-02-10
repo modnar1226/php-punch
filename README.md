@@ -17,7 +17,7 @@ Features:
 Requires:
 1. Composer 
 2. Chrome Browser
-3. Chromdriver
+3. Chromdriver - get package here https://chromedriver.chromium.org/downloads get the version that corresponds to your chrome version. extract executable file form download. mv executable to /usr/bin/chromedriver. chown $USER:$USER /user/bin/chromedriver.
 4. Php
 5. Php-Webdriver via Composer `composer require php-webdriver/webdriver`
 
