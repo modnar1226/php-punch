@@ -53,13 +53,17 @@ class PunchTheClock extends Punchable
         $chromeOptions = new ChromeOptions();
 
         // Configure $chromeOptions
-        
+
         // Set to run without a window
         $chromeOptions->addArguments(['--headless']);
+        // force a screen size to make sure mobile layout designs don't interfere
+        $chromeOptions->addArguments(['--window-size=1920,1000']);
 
         // Create $capabilities and add configuration from ChromeOptions
         $capabilities = DesiredCapabilities::chrome();
         $capabilities->setCapability(ChromeOptions::CAPABILITY_W3C, $chromeOptions);
+        $capabilities->setCapability('platform', 'linux');
+
 
         // Start Chrome
         $this->driver = RemoteWebDriver::create($this->serverUrl, $capabilities);

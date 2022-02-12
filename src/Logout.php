@@ -12,7 +12,6 @@ class Logout implements Runable
         $userOptions = $driver->findElement(
             WebDriverBy::id(CLOCK_PUNCH_VERIFY_LOGIN_ID)
         );
-
         $userOptions->click();
 
         // Find the Item to click

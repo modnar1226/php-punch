@@ -21,14 +21,13 @@ class Out implements Runable
             if (TIMESHEET) { // update to be a config const for debug/ output/ time sheet
                 Output::print(
                     'Clocked Out',
-                    date(Output::PUNCH_TIME_SHEET_FORMAT)
+                    '' // just print the date
                 );
             }
         } catch (WebDriverException $th) {
             Output::print(
                 'ERROR',
-                'No clock out button was not found, you may already be clocked in. Or there may be an error with the css id provided. '
-                . date(Output::PUNCH_TIME_SHEET_FORMAT)
+                'No clock out button was not found, you may already be clocked in. Or there may be an error with the css id provided.' 
             );
         }
     }

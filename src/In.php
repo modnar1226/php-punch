@@ -20,14 +20,13 @@ class In implements Runable
             if (TIMESHEET) { // update to be a config const for debug/ output/ time sheet
                 Output::print(
                     'Clocked In',
-                    date(Output::PUNCH_TIME_SHEET_FORMAT)
+                    '' // just prints the date
                 );
             }
         } catch (WebDriverException $th) {
             Output::print(
                 'ERROR',
-                'No clock in button was not found, you may already be clocked in. Or there may be an error with the css id provided. '
-                . date(Output::PUNCH_TIME_SHEET_FORMAT)
+                'No clock in button was not found, you may already be clocked in. Or there may be an error with the css id provided.'
             );
         }
 
