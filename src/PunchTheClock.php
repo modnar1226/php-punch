@@ -55,9 +55,10 @@ class PunchTheClock extends Punchable
         // Configure $chromeOptions
 
         // Set to run without a window
-        $chromeOptions->addArguments(['--headless']);
+        $chromeOptions->addArguments(["--headless"]);
         // force a screen size to make sure mobile layout designs don't interfere
         $chromeOptions->addArguments(['--window-size=1920,1000']);
+        $chromeOptions->setBinary("/usr/bin/google-chrome");
 
         // Create $capabilities and add configuration from ChromeOptions
         $capabilities = DesiredCapabilities::chrome();

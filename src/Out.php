@@ -27,7 +27,7 @@ class Out implements Runable
         } catch (WebDriverException $th) {
             Output::print(
                 'ERROR',
-                'No clock out button was not found, you may already be clocked in. Or there may be an error with the css id provided.' 
+                'No clock out button was not found, you may already be clocked out. Or there may be an error with the css id provided.' 
             );
         }
     }

@@ -23,6 +23,7 @@ if (command_exists($command)) {
             new PunchTheClock();
             $process->stop();
         } else {
+            sleep(1);
             Output::print(
                 'ERROR',
                 'The ' . $command . ' command did not start.'
