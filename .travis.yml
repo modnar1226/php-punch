@@ -12,9 +12,10 @@ addons:
       - sourceline: 'ppa:ondrej/php'
     packages:
     - php8.1-fpm
+    - libapache2-mod-php8.1
 before_script:
   - sudo apt-get update
-  - sudo apt-get install apache2 libapache2-mod-fastcgi
+  - sudo apt-get install apache2
   
   # enable php-fpm
   - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
