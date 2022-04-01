@@ -9,6 +9,7 @@ class Logout implements Runable
     public static function run($driver)
     {
         // Find the Item to click
+        sleep(10);
         $userOptions = $driver->findElement(
             WebDriverBy::id(CLOCK_PUNCH_VERIFY_LOGIN_ID)
         );

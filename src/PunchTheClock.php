@@ -1,6 +1,7 @@
 <?php
 namespace Punch;
 
+use Facebook\WebDriver\Chrome\ChromeDriver;
 use Punch\Punchable;
 use Punch\In;
 use Punch\Out;
@@ -15,7 +16,7 @@ use Facebook\WebDriver\Exception\NoSuchElementException;
 
 class PunchTheClock extends Punchable
 {
-    private $serverUrl = 'http://localhost:9515';
+    private $serverUrl = 'http://localhost:4444';
     private $driver = null;
 
     public function __construct()
@@ -67,8 +68,8 @@ class PunchTheClock extends Punchable
 
 
         // Start Chrome
-        $this->driver = RemoteWebDriver::create($this->serverUrl, $capabilities);
-
+        //$this->driver = RemoteWebDriver::create($this->serverUrl, $capabilities);
+        $this->driver = ChromeDriver::start($capabilities);
         
         // Gets the punch direction user input, in or out
         $direction = $_SERVER['argv'][1];
