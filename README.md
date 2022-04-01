@@ -3,7 +3,7 @@ A php based tool to aid in clocking in and out automatically.
 
 [![GitHub Release](https://img.shields.io/github/v/release/modnar1226/php-punch?style=flat)]()
 [![Github All Releases](https://img.shields.io/github/downloads/modnar1226/php-punch/total.svg?style=flat)]()
-[![Travis Ci Build](https://travis-ci.com/modnar1226/php-punch.svg?branch=master)]()
+[![Travis Ci Build](https://app.travis-ci.com/modnar1226/php-punch.svg?branch=master)]()
 
 Features:
 

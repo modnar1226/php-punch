@@ -1,6 +1,6 @@
 language: php
 php:
-  - '8'
+  - '8.0'
 env:
   global:
     - CHROME_DRIVER_VERSION=`curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE`
@@ -9,6 +9,8 @@ addons:
 before_script:
   - sudo apt-get update
   - sudo apt-get install apache2 libapache2-mod-fastcgi
+  # custom php-fpm www.conf
+  - sudo cp -f build/travis-php-fpm /etc/php/8.1/fpm/pool.d/www.conf
   # enable php-fpm
   - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
