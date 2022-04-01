@@ -7,6 +7,11 @@ env:
     - CHROME_DRIVER_VERSION=`curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE`
 addons:
   chrome: stable
+  apt:
+    sources:
+      - sourceline: 'ppa:ondrej/php'
+    packages:
+    - php8.1-fpm
 before_script:
   - sudo apt-get update
   - sudo apt-get install apache2 libapache2-mod-fastcgi
