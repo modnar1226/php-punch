@@ -8,7 +8,7 @@ addons:
   chrome: stable
 before_script:
   - sudo apt-get update
-  - sudo apt-get install apache2 libapache2-mod-fastcgi8.1
+  - sudo apt-get install apache2 php8.1-fpm libapache2-mod-fcgid
   # enable php-fpm
   - sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
   - sudo a2enmod rewrite actions fastcgi alias
