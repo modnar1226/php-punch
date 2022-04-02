@@ -12,12 +12,14 @@ use Punch\PaidTimeOff;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
+use Facebook\WebDriver\Chrome\ChromeDriverService;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 
 class PunchTheClock extends Punchable
 {
     private $serverUrl = 'http://localhost:4444';
     private $driver = null;
+    private $port = 4444;
 
     public function __construct()
     {
@@ -69,7 +71,12 @@ class PunchTheClock extends Punchable
 
         // Start Chrome
         //$this->driver = RemoteWebDriver::create($this->serverUrl, $capabilities);
-        $this->driver = ChromeDriver::start($capabilities);
+        $pathToExecutable = getenv(ChromeDriverService::CHROME_DRIVER_EXECUTABLE) ?: getenv(ChromeDriverService::CHROME_DRIVER_EXE_PROPERTY);
+        if ($pathToExecutable === false || $pathToExecutable === '') {
+            $pathToExecutable = ChromeDriverService::DEFAULT_EXECUTABLE;
+        }
+        $chromeDriverservice = new ChromeDriverService($pathToExecutable, $this->port, ['--port=' . $this->port]);
+        $this->driver = ChromeDriver::startUsingDriverService($chromeDriverservice, $capabilities);
         
         // Gets the punch direction user input, in or out
         $direction = $_SERVER['argv'][1];
