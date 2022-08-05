@@ -19,7 +19,7 @@ class PunchTheClock extends Punchable
 {
     private $serverUrl = 'http://localhost:4444';
     private $driver = null;
-    private $port = 4444;
+    private $port = 9515;
 
     public function __construct()
     {
@@ -94,7 +94,13 @@ class PunchTheClock extends Punchable
         // anything between 0-60 seconds is still in the same minute, and kind of pointless
         sleep(mt_rand(0, ($timeToWait * 60)));
 
-        $this->punch($direction);
+        try {
+            $this->punch($direction);
+        } catch (\Throwable $th) {
+            // force the browser to close if we have an error, then throw the error
+            $this->driverQuit();
+            throw $th;
+        }
     }
 
     protected function punch($direction)
@@ -109,7 +115,10 @@ class PunchTheClock extends Punchable
         }
         // Check user input & login
         // common login for both scenarios
-        Login::run($this->driver);
+        if (!Login::run($this->driver)) {
+            exit();
+        }
+        
 
         // Check user input & login
         if (DEBUG) {
@@ -128,7 +137,7 @@ class PunchTheClock extends Punchable
         Logout::run($this->driver);
     }
 
-    public function __destruct()
+    private function driverQuit()
     {
         if ($this->driver !== null) {
             if (DEBUG) {
@@ -137,5 +146,10 @@ class PunchTheClock extends Punchable
             // close the browser
             $this->driver->quit();
         }
+    }
+
+    public function __destruct()
+    {
+        $this->driverQuit();
     }
 }

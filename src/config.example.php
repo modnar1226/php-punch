@@ -26,6 +26,10 @@ define('CLOCK_PUNCH_OUT_ID', 'punch_out');
 // Currently tied to a drop down click and a 2nd click to the logout button
 define('CLOCK_PUNCH_VERIFY_LOGIN_ID', 'user_dropdown');
 
+// Validation Error css elements
+define('CLOCK_PUNCH_ERROR_ID', 'ValidationSummary1');
+define('CLOCK_PUNCH_ERROR_TEXT', '#ValidationSummary1 ul li');
+
 define('MAX_WAIT', 5);
 // echo text in csv format.
 define('TIMESHEET',false);

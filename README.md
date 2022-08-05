@@ -18,10 +18,10 @@ Requires:
 1. Composer, for install instructions: https://getcomposer.org/download
 2. Chrome Browser: Version match required when installing ChromeDriver. Most recent version recommended
 3. ChromeDriver - get package here https://chromedriver.chromium.org/downloads get the version that corresponds to your chrome version. 
+    ## Note: follow these instructions when upgrading your browser
     1. unzip chromedriver_linux64.zip
     2. sudo mv -f chromedriver /usr/local/share/chromedriver
     3. sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
-    4. sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
 4. Php
 5. Php-Webdriver via Composer `composer install --no-dev`
 
