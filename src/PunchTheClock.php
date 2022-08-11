@@ -9,6 +9,8 @@ use Punch\Login;
 use Punch\Logout;
 use Punch\Holiday;
 use Punch\PaidTimeOff;
+use Punch\Output;
+
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
@@ -26,7 +28,7 @@ class PunchTheClock extends Punchable
         $this->validate($_SERVER['argv']);
 
         if (DEBUG) {
-            echo '"DEBUG","Checking for holidays..."' . "\n";
+            Output::print('DEBUG', 'Checking for holidays...');
         }
         // Check for holidays first, no need to punch anything if we're off today!
         foreach (HOLIDAYS as $label => $date) {
@@ -49,7 +51,7 @@ class PunchTheClock extends Punchable
         }
 
         if (DEBUG) {
-            echo '"DEBUG","Its not a holiday nor are we using Paid Time Off, we need to punch the clock"' . "\n";
+            Output::print('DEBUG', 'Its not a holiday nor are we using Paid Time Off, we need to punch the clock');
         }
 
         // Create an instance of ChromeOptions:
@@ -84,9 +86,9 @@ class PunchTheClock extends Punchable
         // Wait to simulate human error, between 0 min and either the users input or a max of MAX_WAIT in min
         $timeToWait = (((isset($_SERVER['argv'][2])) && $_SERVER['argv'][2] !== null && is_numeric($_SERVER['argv'][2])) ? $_SERVER['argv'][2] : MAX_WAIT);
         if (DEBUG) {
-            echo '"DEBUG","Is input not empty: '. !empty($_SERVER['argv'][2]) . '"' . "\n";
-            echo '"DEBUG","Time to wait input: '. $_SERVER['argv'][2] . '"' . "\n";
-            echo '"DEBUG","Time to wait: '. $timeToWait . '"' . "\n";
+            Output::print('DEBUG', 'Is input not empty: ' . !empty($_SERVER['argv'][2]));
+            Output::print('DEBUG', 'Time to wait input: ' . $_SERVER['argv'][2]);
+            Output::print('DEBUG', 'Is input not empty: ' . $timeToWait);
         }
 
         // multiply the time to wait by 60 to get number of seconds.
@@ -106,12 +108,12 @@ class PunchTheClock extends Punchable
     protected function punch($direction)
     {
         if (DEBUG) {
-            echo '"DEBUG","Loading url: ' . CLOCK_URL . '"' . "\n";
+            Output::print('DEBUG', 'Loading url: ' . CLOCK_URL);
         }
         $this->driver->get(CLOCK_URL);
 
         if (DEBUG) {
-            echo '"DEBUG","Logging in."' . "\n";
+            Output::print('DEBUG', 'Logging in.');
         }
         // Check user input & login
         // common login for both scenarios
@@ -122,7 +124,7 @@ class PunchTheClock extends Punchable
 
         // Check user input & login
         if (DEBUG) {
-            echo '"DEBUG","Clocking In or Out?: ' . $direction . '"' . "\n";
+            Output::print('DEBUG', 'Clocking In or Out?: ' . $direction);
         }
 
         // punch in 
@@ -131,7 +133,7 @@ class PunchTheClock extends Punchable
         in_array($direction, self::OUT) ? Out::run($this->driver) : null;
 
         if (DEBUG) {
-            echo '"DEBUG","Logging out."' . "\n";
+            Output::print('DEBUG', 'Logging out.');
         }
         // common logout for both scenarios
         Logout::run($this->driver);
@@ -141,7 +143,7 @@ class PunchTheClock extends Punchable
     {
         if ($this->driver !== null) {
             if (DEBUG) {
-                echo '"DEBUG","Closing the browser."' . "\n";
+                Output::print('DEBUG', 'Closing the browser.');
             }
             // close the browser
             $this->driver->quit();

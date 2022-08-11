@@ -27,8 +27,8 @@ define('CLOCK_PUNCH_OUT_ID', 'punch_out');
 define('CLOCK_PUNCH_VERIFY_LOGIN_ID', 'user_dropdown');
 
 // Validation Error css elements
-define('CLOCK_PUNCH_ERROR_ID', 'ValidationSummary1');
-define('CLOCK_PUNCH_ERROR_TEXT', '#ValidationSummary1 ul li');
+define('CLOCK_PUNCH_ERROR_ID', 'error text id');
+define('CLOCK_PUNCH_ERROR_TEXT', 'error text css path');
 
 define('MAX_WAIT', 5);
 // echo text in csv format.

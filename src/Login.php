@@ -11,21 +11,21 @@ class Login implements Runable
     public static function run($driver)
     {
         if (DEBUG) {
-            echo '"DEBUG","Enter Username"' . "\n";
+            Output::print('DEBUG', 'Enter Username');
         }
         // Find username element by its id, write the username inside
         $driver->findElement(WebDriverBy::id(CLOCK_USER_FIELD_ID)) // find username input element
             ->sendKeys(CLOCK_USER); // fill the input box
 
         if (DEBUG) {
-            echo '"DEBUG","Enter Password"' . "\n";
+            Output::print('DEBUG', 'Enter Password');
         }
         // Find password element by its id, write the password inside
         $driver->findElement(WebDriverBy::id(CLOCK_PASS_FIELD_ID)) // find password input element
             ->sendKeys(CLOCK_PASS); // fill the input box
 
         if (DEBUG) {
-            echo '"DEBUG","Find Login Button"' . "\n";
+            Output::print('DEBUG', 'Find Login Button');
         }
         // Find the Item to click
         $loginButton = $driver->findElement(
@@ -33,39 +33,55 @@ class Login implements Runable
         );
 
         if (DEBUG) {
-            echo '"DEBUG","Click Login Button"' . "\n";
+            Output::print('DEBUG','Click Login Button');
         }
         // Click the element to navigate to punch screen
         $loginButton->click();
 
-        // Check for log in errors
-        $errorDiv = $driver->findElement(
-            WebDriverBy::id(CLOCK_PUNCH_ERROR_ID)
-        );
+        $errorTextLi = [];
 
-        if ($errorDiv) {
+        try {
+            if (DEBUG) {
+                Output::print('DEBUG', 'Checking for Errors');
+            }
             // wait until the text element is found
-            $driver->wait(10, 1)->until(
+            $driver->wait(5, 1)->until(
                 WebDriverExpectedCondition::presenceOfElementLocated(
                     WebDriverBy::cssSelector(CLOCK_PUNCH_ERROR_TEXT)
                 )
             );
-
-            $errorText = $driver->findElement(
+            // Check for log in errors
+            $errorTextLi = $driver->findElements(
                 WebDriverBy::cssSelector(CLOCK_PUNCH_ERROR_TEXT)
-            )->getText();
-
-            Output::print(
-                'ERROR',
-                $errorText
             );
+        } catch (\Throwable $th) {
+            if (DEBUG) {
+                Output::print('DEBUG', 'No Errors found');
+            }
+        }
 
-            $notification_script = "notify-send -u critical -t 0 'Clock in Authorization Error' '{$errorText}'";
+        
+        if (count($errorTextLi)) {
+            if (DEBUG) {
+                Output::print('DEBUG','Login error found');
+            }
+
+            $errorText = "When logging in to the time clock application there was an error,\n";
+            foreach ($errorTextLi as $element) {
+                $errorText .= $element->getText();
+            }
+
+            Output::print('ERROR',$errorText);
+
+            $notification_script = "notify-send -u critical -t 0 'Login Authorization Error:' '{$errorText}'";
             $handle = popen($notification_script, 'r');
             pclose($handle);
 
             return false;
         } else {
+            if (DEBUG) {
+                Output::print('DEBUG','Login succeeded');
+            }
             // verify the login, wait 10 seconds until the user drop down is found.
             $driver->wait(10, 1)->until(
                 WebDriverExpectedCondition::presenceOfElementLocated(

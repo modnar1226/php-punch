@@ -17,11 +17,8 @@ class In implements Runable
 
             // Click the element to login
             $in->click();
-            if (TIMESHEET) { // update to be a config const for debug/ output/ time sheet
-                Output::print(
-                    'Clocked In',
-                    '' // just prints the date
-                );
+            if (TIMESHEET) {
+                Output::print('Clocked In','');
             }
         } catch (WebDriverException $th) {
             Output::print(
