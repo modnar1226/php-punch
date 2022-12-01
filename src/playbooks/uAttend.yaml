@@ -1,0 +1,36 @@
+platform: linux # linux or windows
+debug: false
+observedHolidays: true # when the holiday would be on a weekend and you still get the day
+maxWaitTime: 20 # seconds
+printTimeSheet: true
+chromeBrowserExecutablePath: null
+chromeDriverExecutablePath: null
+clockUrl: https://v2.trackmytime.com/donorsearch?637363812648188280 # the path to your time clock website
+steps:
+  login:
+    user: 
+    password: 
+    # css ids prefered
+    userFieldCssSelector: txtUserName
+    passwordFieldCssSelector: txtPassword
+    loginFieldCssSelector: loginIn
+    verifyLoginFieldCssSelector: dropdownMenu1
+    validationErrorCssSelector: ValidationSummary1
+    validationErrorTextCssSelector: '#ValidationSummary1 ul li'
+  clockIn:
+    clockInCssSelector: ContentPlaceHolder1_lbPunchIn
+  clockOut:
+    clockOutCssSelector: ContentPlaceHolder1_lbPunchOut
+  logout:
+    logoutFieldCssSelector: lbtnLogout
+holidays:
+  - New Years Day
+  # - MLK Day
+  - Memorial Day
+  - Independence Day
+  - Labor Day
+  # - Veterans Day
+  # - Columbus Day
+  - Thanksgiving Day
+  - Christmas Day
+paidTimeOffDays:

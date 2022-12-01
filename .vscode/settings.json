@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "file:///home/ian/.vscode/extensions/atlassian.atlascode-2.10.12/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
+        "https://json.schemastore.org/yamllint.json": "file:///home/ian/php-punch/src/playbooks/uAttend.yaml"
+    }
+}
