@@ -1,6 +1,8 @@
 <?php
 namespace Punch;
 
+require_once __DIR__ . '/config.php';
+
 use Facebook\WebDriver\Chrome\ChromeDriver;
 use Punch\Punchable;
 use Punch\In;
@@ -25,6 +27,10 @@ class PunchTheClock extends Punchable
 
     public function __construct()
     {
+        if (PLATFORM !== 'linux' && (DRIVER_EXE_PATH === '' || CHROME_EXE_PATH === '')) {
+            throw new \Exception("When the platform is not linux, you must specify the paths to both the Chrome browser and Chromedirver executable files in the config.php file.", 1);
+        }
+
         $this->validate($_SERVER['argv']);
 
         if (DEBUG) {
@@ -63,20 +69,18 @@ class PunchTheClock extends Punchable
         $chromeOptions->addArguments(["--headless"]);
         // force a screen size to make sure mobile layout designs don't interfere
         $chromeOptions->addArguments(['--window-size=1920,1000']);
-        $chromeOptions->setBinary("/usr/bin/google-chrome");
+        $chromeOptions->setBinary(
+            PLATFORM !== 'linux' ? CHROME_EXE_PATH : "/usr/bin/google-chrome"
+        );
 
         // Create $capabilities and add configuration from ChromeOptions
         $capabilities = DesiredCapabilities::chrome();
         $capabilities->setCapability(ChromeOptions::CAPABILITY_W3C, $chromeOptions);
-        $capabilities->setCapability('platform', 'linux');
+        $capabilities->setCapability('platform', PLATFORM);
 
 
         // Start Chrome
-        //$this->driver = RemoteWebDriver::create($this->serverUrl, $capabilities);
-        $pathToExecutable = getenv(ChromeDriverService::CHROME_DRIVER_EXECUTABLE) ?: getenv(ChromeDriverService::CHROME_DRIVER_EXE_PROPERTY);
-        if ($pathToExecutable === false || $pathToExecutable === '') {
-            $pathToExecutable = ChromeDriverService::DEFAULT_EXECUTABLE;
-        }
+        $pathToExecutable = PLATFORM !== 'linux' ? DRIVER_EXE_PATH : 'chromedriver';
         $chromeDriverservice = new ChromeDriverService($pathToExecutable, $this->port, ['--port=' . $this->port]);
         $this->driver = ChromeDriver::startUsingDriverService($chromeDriverservice, $capabilities);
         

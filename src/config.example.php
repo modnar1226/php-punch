@@ -6,6 +6,13 @@ $classLoader = new \Composer\Autoload\ClassLoader();
 $classLoader->addPsr4("Punch\\", __DIR__, true);
 $classLoader->register();
 
+// OS Platform
+define( 'PLATFORM', 'linux');
+//define('PLATFORM', 'windows');
+
+define('DRIVER_EXE_PATH', '');
+define('CHROME_EXE_PATH', '');
+
 // Web site url used to clock in or out
 define('CLOCK_URL', 'http://localhost/');
 
