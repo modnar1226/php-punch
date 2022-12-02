@@ -3,6 +3,7 @@ namespace Punch;
 
 use Punch\Holiday;
 use Punch\PaidTimeOff;
+use Symfony\Component\Yaml\Yaml;
 
 abstract class Punchable
 {
@@ -46,6 +47,22 @@ abstract class Punchable
 
         if ((!empty($argv[2])) && !is_numeric($argv[2])) {
             throw new \Exception("Invalid time to wait value, it must be numeric!", 1);
+        }
+    }
+
+    // validate the yaml file and parse it into a CONFIG constant
+    protected function buildConstants()
+    {
+        $filePath = dirname(__FILE__) . '/playbooks/' . PLAYBOOK . '.yaml';
+        $validatorPath = dirname(dirname(__FILE__)) . '/validation/ValidatePlaybook.php --format json';
+        if (file_exists($filePath)) {
+            ob_start();
+            passthru('php ' . $validatorPath . ' ' . $filePath,$result);
+            $output = json_decode(ob_get_contents(),true);
+            ob_end_clean();
+            if ($output[0]['valid']) {
+                define('CONFIG', Yaml::parseFile($filePath));
+            }
         }
     }
 }

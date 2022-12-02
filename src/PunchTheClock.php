@@ -12,6 +12,7 @@ use Punch\Logout;
 use Punch\Holiday;
 use Punch\PaidTimeOff;
 use Punch\Output;
+use Punch\Runner;
 
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
@@ -23,7 +24,7 @@ class PunchTheClock extends Punchable
 {
     private $serverUrl = 'http://localhost:4444';
     private $driver = null;
-    private $port = 9515;
+    private $port = null;
 
     public function __construct()
     {
@@ -33,7 +34,9 @@ class PunchTheClock extends Punchable
 
         $this->validate($_SERVER['argv']);
 
-        if (DEBUG) {
+        $this->buildConstants();
+        $this->port = CONFIG['port'];
+        if (CONFIG['debug']) {
             Output::print('DEBUG', 'Checking for holidays...');
         }
         // Check for holidays first, no need to punch anything if we're off today!
@@ -56,7 +59,7 @@ class PunchTheClock extends Punchable
             : null;
         }
 
-        if (DEBUG) {
+        if (CONFIG['debug']) {
             Output::print('DEBUG', 'Its not a holiday nor are we using Paid Time Off, we need to punch the clock');
         }
 
@@ -70,17 +73,17 @@ class PunchTheClock extends Punchable
         // force a screen size to make sure mobile layout designs don't interfere
         $chromeOptions->addArguments(['--window-size=1920,1000']);
         $chromeOptions->setBinary(
-            PLATFORM !== 'linux' ? CHROME_EXE_PATH : "/usr/bin/google-chrome"
+            CONFIG['platform'] !== 'linux' ? CONFIG['chromeBrowserExecutablePath'] : "/usr/bin/google-chrome"
         );
 
         // Create $capabilities and add configuration from ChromeOptions
         $capabilities = DesiredCapabilities::chrome();
         $capabilities->setCapability(ChromeOptions::CAPABILITY_W3C, $chromeOptions);
-        $capabilities->setCapability('platform', PLATFORM);
+        $capabilities->setCapability('platform', CONFIG['platform']);
 
 
         // Start Chrome
-        $pathToExecutable = PLATFORM !== 'linux' ? DRIVER_EXE_PATH : 'chromedriver';
+        $pathToExecutable = CONFIG['platform'] !== 'linux' ? CONFIG['chromeDriverExecutablePath'] : 'chromedriver';
         $chromeDriverservice = new ChromeDriverService($pathToExecutable, $this->port, ['--port=' . $this->port]);
         $this->driver = ChromeDriver::startUsingDriverService($chromeDriverservice, $capabilities);
         
@@ -88,8 +91,8 @@ class PunchTheClock extends Punchable
         $direction = $_SERVER['argv'][1];
 
         // Wait to simulate human error, between 0 min and either the users input or a max of MAX_WAIT in min
-        $timeToWait = (((isset($_SERVER['argv'][2])) && $_SERVER['argv'][2] !== null && is_numeric($_SERVER['argv'][2])) ? $_SERVER['argv'][2] : MAX_WAIT);
-        if (DEBUG) {
+        $timeToWait = (((isset($_SERVER['argv'][2])) && $_SERVER['argv'][2] !== null && is_numeric($_SERVER['argv'][2])) ? $_SERVER['argv'][2] : CONFIG['maxWaitTime']);
+        if (CONFIG['debug']) {
             Output::print('DEBUG', 'Is input not empty: ' . !empty($_SERVER['argv'][2]));
             Output::print('DEBUG', 'Time to wait input: ' . $_SERVER['argv'][2]);
             Output::print('DEBUG', 'Is input not empty: ' . $timeToWait);
@@ -103,6 +106,7 @@ class PunchTheClock extends Punchable
         try {
             $this->punch($direction);
         } catch (\Throwable $th) {
+            Output::print('ERROR', $th->getMessage());
             // force the browser to close if we have an error, then throw the error
             $this->driverQuit();
             throw $th;
@@ -111,42 +115,42 @@ class PunchTheClock extends Punchable
 
     protected function punch($direction)
     {
-        if (DEBUG) {
-            Output::print('DEBUG', 'Loading url: ' . CLOCK_URL);
+        if (CONFIG['debug']) {
+            Output::print('DEBUG', 'Loading url: ' . CONFIG['clockUrl']);
         }
-        $this->driver->get(CLOCK_URL);
+        $this->driver->get(CONFIG['clockUrl']);
 
-        if (DEBUG) {
+        if (CONFIG['debug']) {
             Output::print('DEBUG', 'Logging in.');
         }
         // Check user input & login
         // common login for both scenarios
-        if (!Login::run($this->driver)) {
+        if (!Login::run(new Runner(CONFIG['steps']['login'], $this->driver),$this->driver)) {
             exit();
         }
         
 
         // Check user input & login
-        if (DEBUG) {
+        if (CONFIG['debug']) {
             Output::print('DEBUG', 'Clocking In or Out?: ' . $direction);
         }
 
         // punch in 
-        in_array($direction, self::IN) ? In::run($this->driver) : null;
+        in_array($direction, self::IN) ? In::run(new Runner(CONFIG['steps']['clockIn'],$this->driver),$this->driver) : null;
         // or punch out
-        in_array($direction, self::OUT) ? Out::run($this->driver) : null;
+        in_array($direction, self::OUT) ? Out::run(new Runner(CONFIG['steps']['clockOut'],$this->driver),$this->driver) : null;
 
-        if (DEBUG) {
+        if (CONFIG['debug']) {
             Output::print('DEBUG', 'Logging out.');
         }
         // common logout for both scenarios
-        Logout::run($this->driver);
+        Logout::run(new Runner(CONFIG['steps']['logout'],$this->driver),$this->driver);
     }
 
     private function driverQuit()
     {
         if ($this->driver !== null) {
-            if (DEBUG) {
+            if (CONFIG['debug']) {
                 Output::print('DEBUG', 'Closing the browser.');
             }
             // close the browser

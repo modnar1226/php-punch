@@ -6,21 +6,22 @@ use Facebook\WebDriver\WebDriverBy;
 
 class Logout implements Runable
 {
-    public static function run($driver)
+    public static function run($runner, $driver)
     {
+        return $runner->processSteps();
         // Find the Item to click
-        sleep(10);
-        $userOptions = $driver->findElement(
-            WebDriverBy::id(CLOCK_PUNCH_VERIFY_LOGIN_ID)
-        );
-        $userOptions->click();
+        // sleep(10);
+        // $userOptions = $driver->findElement(
+        //     WebDriverBy::id(CLOCK_PUNCH_VERIFY_LOGIN_ID)
+        // );
+        // $userOptions->click();
 
-        // Find the Item to click
-        $logoutBtn = $driver->findElement(
-            WebDriverBy::id(CLOCK_LOGOUT_FIELD_ID)
-        );
+        // // Find the Item to click
+        // $logoutBtn = $driver->findElement(
+        //     WebDriverBy::id(CLOCK_LOGOUT_FIELD_ID)
+        // );
 
-        // Logout
-        $logoutBtn->click();
+        // // Logout
+        // $logoutBtn->click();
     }
 }
