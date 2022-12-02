@@ -69,3 +69,4 @@ holidays:
   - Thanksgiving Day
   - Christmas Day
 paidTimeOffDays:
+  # - 12/31/2022

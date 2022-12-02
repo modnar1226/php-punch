@@ -28,13 +28,14 @@ class PunchTheClock extends Punchable
 
     public function __construct()
     {
-        if (PLATFORM !== 'linux' && (DRIVER_EXE_PATH === '' || CHROME_EXE_PATH === '')) {
+        $this->buildConstants();
+        
+        if (CONFIG['platform'] !== 'linux' && (CONFIG['chromeDriverExecutablePath'] === '' || CONFIG['chromeBrowserExecutablePath'] === '')) {
             throw new \Exception("When the platform is not linux, you must specify the paths to both the Chrome browser and Chromedirver executable files in the config.php file.", 1);
         }
 
         $this->validate($_SERVER['argv']);
 
-        $this->buildConstants();
         $this->port = CONFIG['port'];
         if (CONFIG['debug']) {
             Output::print('DEBUG', 'Checking for holidays...');
@@ -125,7 +126,10 @@ class PunchTheClock extends Punchable
         }
         // Check user input & login
         // common login for both scenarios
-        if (!Login::run(new Runner(CONFIG['steps']['login'], $this->driver),$this->driver)) {
+        if (! (new Runner(
+                CONFIG['steps']['login'],
+                $this->driver
+            ))->processSteps()) {
             exit();
         }
         
@@ -136,15 +140,21 @@ class PunchTheClock extends Punchable
         }
 
         // punch in 
-        in_array($direction, self::IN) ? In::run(new Runner(CONFIG['steps']['clockIn'],$this->driver),$this->driver) : null;
+        in_array($direction, self::IN)
+        ? (new Runner(CONFIG['steps']['clockIn'],$this->driver))->processSteps()
+        : null;
+
         // or punch out
-        in_array($direction, self::OUT) ? Out::run(new Runner(CONFIG['steps']['clockOut'],$this->driver),$this->driver) : null;
+        in_array($direction, self::OUT)
+        ? (new Runner(CONFIG['steps']['clockOut'],$this->driver))->processSteps()
+        : null;
 
         if (CONFIG['debug']) {
             Output::print('DEBUG', 'Logging out.');
         }
+
         // common logout for both scenarios
-        Logout::run(new Runner(CONFIG['steps']['logout'],$this->driver),$this->driver);
+        (new Runner(CONFIG['steps']['logout'],$this->driver))->processSteps();
     }
 
     private function driverQuit()

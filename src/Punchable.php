@@ -7,6 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 
 abstract class Punchable
 {
+
     const IN = array(
         'in', 'In', 'IN', 'en', 'En', 'EN'
     );
@@ -14,6 +15,8 @@ abstract class Punchable
     const OUT = array(
         'out', 'Out', 'OUT', 'fuera', 'Fuera', 'FUERA'
     );
+
+    
 
     abstract protected function punch($direction);
 
@@ -64,5 +67,70 @@ abstract class Punchable
                 define('CONFIG', Yaml::parseFile($filePath));
             }
         }
+
+        $this->buildHolidays();
+        $this->buildPaidTimeOffDays();
+    }
+
+    protected function buildHolidays()
+    {
+        $holidaysToSet = [];
+        $availableHolidays = $this->availableHolidays();
+        foreach (CONFIG['holidays'] as $holiday) {
+            if (in_array($holiday, array_keys($availableHolidays))) {
+                $holidaysToSet[$holiday] = $this->availableHolidays($holiday);
+            }
+        }
+
+        define('HOLIDAYS',$holidaysToSet);
+    }
+
+    public function availableHolidays($holiday = null)
+    {
+        $currentYear = date("Y");
+        $dateFormat = 'd-m-Y';
+        $independenceDayTime = strtotime("07/04/$currentYear");
+
+        if (CONFIG['observedHolidays']) {
+            // function to determine if forth of july is on a sunday.
+            $isTheFourthOfJulyOnSunday = function ($time) {
+                return ((int) date('N', $time) === 7);
+            };
+
+            if ($isTheFourthOfJulyOnSunday($independenceDayTime)) {
+                $independenceDayTime = strtotime("07/05/$currentYear");
+            }
+        }
+
+        $holidays = array(
+            'New Years Day'    => date($dateFormat, strtotime("01/01/$currentYear")),
+            'MLK Day'          => date($dateFormat, strtotime("third monday of January $currentYear")),
+            'Memorial Day'     => date($dateFormat, strtotime("last monday of May $currentYear")),
+            'Independence Day' => date($dateFormat, strtotime($independenceDayTime)),
+            'Labor Day'        => date($dateFormat, strtotime("first monday of September $currentYear")),
+            'Veterans Day'     => date($dateFormat, strtotime("11/11/$currentYear")),
+            'Columbus Day'     => date($dateFormat, strtotime("second monday of October $currentYear")),
+            'Thanksgiving Day' => date($dateFormat, strtotime("fourth thursday of November $currentYear")),
+            'Christmas Day'    => date($dateFormat, strtotime("12/25/$currentYear"))
+        );
+
+        return ($holiday === null || empty($holidays[$holiday])) ? $holidays : $holidays[$holiday];
+    }
+
+    protected function buildPaidTimeOffDays()
+    {
+        $dateFormat = 'd-m-Y';
+
+        $datesToSet = [];
+        foreach (CONFIG['paidTimeOffDays'] as $date) {
+            $datesToSet[] = date($dateFormat, strtotime($date));
+        }
+
+        define('PAID_TIME_OFF_DAYS', $datesToSet);
+
+        echo '<pre>';
+        var_export(PAID_TIME_OFF_DAYS);
+        echo '</pre>';
+        die;
     }
 }
