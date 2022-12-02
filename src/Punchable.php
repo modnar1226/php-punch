@@ -76,9 +76,11 @@ abstract class Punchable
     {
         $holidaysToSet = [];
         $availableHolidays = $this->availableHolidays();
-        foreach (CONFIG['holidays'] as $holiday) {
-            if (in_array($holiday, array_keys($availableHolidays))) {
-                $holidaysToSet[$holiday] = $this->availableHolidays($holiday);
+        if (!empty(CONFIG['holidays'])) {
+            foreach (CONFIG['holidays'] as $holiday) {
+                if (in_array($holiday, array_keys($availableHolidays))) {
+                    $holidaysToSet[$holiday] = $this->availableHolidays($holiday);
+                }
             }
         }
 
@@ -122,15 +124,12 @@ abstract class Punchable
         $dateFormat = 'd-m-Y';
 
         $datesToSet = [];
-        foreach (CONFIG['paidTimeOffDays'] as $date) {
-            $datesToSet[] = date($dateFormat, strtotime($date));
+        if (!empty(CONFIG['paidTimeOffDays'])) {
+            foreach (CONFIG['paidTimeOffDays'] as $date) {
+                $datesToSet[] = date($dateFormat, strtotime($date));
+            }
         }
 
         define('PAID_TIME_OFF_DAYS', $datesToSet);
-
-        echo '<pre>';
-        var_export(PAID_TIME_OFF_DAYS);
-        echo '</pre>';
-        die;
     }
 }

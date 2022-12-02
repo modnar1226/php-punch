@@ -11,10 +11,10 @@ steps:
   login:
     'Enter Username': 
       findElement: [txtUserName]
-      sendKeys:  # username
+      sendKeys: igreene # username
     'Enter Password': 
       findElement: [txtPassword]
-      sendKeys:  # password
+      sendKeys: 39Newfield # password
     'Find Login Button': 
       findElement: [loginIn]
       click: true
@@ -69,4 +69,8 @@ holidays:
   - Thanksgiving Day
   - Christmas Day
 paidTimeOffDays:
-  # - 12/31/2022
+  - 12/26/2022
+  - 12/27/2022
+  - 12/28/2022
+  - 12/29/2022
+  - 12/30/2022
