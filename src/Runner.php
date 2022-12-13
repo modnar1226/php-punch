@@ -10,6 +10,8 @@ class Runner
 {
     private $steps = [];
     private $driver;
+    private $currentElement;
+    private $currentElements = [];
     
     public function __construct($steps, $driver)
     {
@@ -20,8 +22,6 @@ class Runner
     public function processSteps()
     {
         $persistElement = false;
-        $currentElement = null;
-        $elementList = [];
         foreach ($this->steps as $name => $step) {
             if (CONFIG['debug']) {
                 Output::print('DEBUG', $name);
@@ -41,17 +41,18 @@ class Runner
 
             foreach ($step as $action => $data) {
                 if ($action === 'checkErrors') {
-                    $message = $step['checkErrors']['success']['message'];;
-                    if ($currentElement !== null) { // single element
-                        $message = $currentElement->getText();
-                        $currentElement = null;
+                    $message = $step['checkErrors']['success']['message'];
+                    $printMessage = !empty($step['checkErrors']['success']['print']) ? $step['checkErrors']['success']['print'] : false;
+                    if ($this->currentElement !== null) { // single element
+                        $message = $this->currentElement->getText();
+                        $this->currentElement = null;
                         $action = 'error';
-                    } elseif (count($elementList)) { // array of elements
+                    } elseif (count($this->currentElements)) { // array of elements
                         $message = $step['checkErrors']['error']['message'];
-                        foreach ($elementList as $element) {
+                        foreach ($this->currentElements as $element) {
                             $message .= ' ' . $element->getText();
                         }
-                        $elementList = [];
+                        $this->currentElements = [];
                         $action = 'error';
                     } else {
                         // no elements saved to check, assumes no errors
@@ -66,21 +67,21 @@ class Runner
                                 ? WebDriverBy::cssSelector($data[0])
                                 : WebDriverBy::id($data[0]);
                             $element = $this->driver->findElement($selector);
-                            $currentElement = $persistElement ? $element : null;
+                            $this->currentElement = $persistElement ? $element : null;
                             break;
                         case 'findElements':
                             $elements = $this->driver->findElements(
                                 WebDriverBy::cssSelector($data)
                             );
-                            $elementList = $persistElement ? $elements : [];
+                            $this->currentElements = $persistElement ? $elements : [];
                             break;
                         case 'sendKeys':
-                            $currentElement->sendKeys($data);
-                            $currentElement = null;
+                            $this->currentElement->sendKeys($data);
+                            $this->currentElement = null;
                             break;
                         case 'click':
-                            $currentElement->click();
-                            $currentElement = null;
+                            $this->currentElement->click();
+                            $this->currentElement = null;
                             break;
                         case 'waitUntilLocated':
                             try {
@@ -99,13 +100,41 @@ class Runner
                                 );
                             } catch (\Throwable $th) {
                                 if (CONFIG['debug']) {
-                                    Output::print('DEBUG', 'No Errors found');
+                                    Output::print('DEBUG', 'No Elements found');
                                 }
                             }
+                            break;
+                        case 'waitToBeClicked':
+                            $timeToWait = (!empty($data[2]))
+                                ? $data[2]
+                                : 10; // seconds
+                            $selector = (!empty($data[1]) && $data[1] === 'cssSelector')
+                                ? WebDriverBy::cssSelector($data[0])
+                                : WebDriverBy::id($data[0]);
+                            $element = $this->driver->wait($timeToWait, 1000)->until(
+                                WebDriverExpectedCondition::elementToBeClickable($selector)
+                            );
+                            $element->click();
+                            break;
+                        case 'waitUntilInvisible':
+                            $timeToWait = (!empty($data[2]))
+                                ? $data[2]
+                                : 10; // seconds
+                            $selector = (!empty($data[1]) && $data[1] === 'cssSelector')
+                                ? WebDriverBy::cssSelector($data[0])
+                                : WebDriverBy::id($data[0]);
+                            $this->driver->wait($timeToWait, 1000)->until(
+                                WebDriverExpectedCondition::invisibilityOfElementLocated($selector)
+                            );
                             break;
                         case 'success':
                             if (CONFIG['debug']) {
                                 Output::print('DEBUG', $message);
+                            }
+
+                            // only set inside the $step['checkErrors']['success']['print'] 
+                            if ($printMessage) {
+                                Output::print($message, '');
                             }
                             return true;
                             break;

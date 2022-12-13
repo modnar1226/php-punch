@@ -10,7 +10,7 @@ clockUrl: https://v2.trackmytime.com/donorsearch?637363812648188280 # the path t
 steps:
   login:
     'Enter Username': 
-      findElement: [txtUserName]
+      findElement: [txtUserName] # css id
       sendKeys: igreene # username
     'Enter Password': 
       findElement: [txtPassword]
@@ -22,12 +22,12 @@ steps:
       waitUntilLocated: ['#ValidationSummary1 ul li', cssSelector, 5] # specify that we want to use cssSelector instead of ID
       findElements: '#ValidationSummary1 ul li'
       checkErrors: 
-        success:
+        success: # success should always be first
           message: No Validation Errors
         error:
           message: 'When logging in to the time clock application there was an error:'
     'Verify Login':
-      waitUntilLocated: [dropdownMenu1, id, 10]
+      waitUntilLocated: [dropdownMenu1, id, 10] # default cssSelector is id, override the default time to wait
       checkErrors:
         success:
           message: Login succeeded
@@ -40,6 +40,7 @@ steps:
       checkErrors:
         success: 
           message: Clocked In
+          print: true
         error: 
           message: No clock in button was not found, you may already be clocked in. Or there may be an error with the css id provided.
   clockOut:
@@ -48,11 +49,13 @@ steps:
       click: true
       checkErrors:
         success: 
-          message: Clocked In
+          message: Clocked Out
+          print: true
         error: 
           message: No clock out button was not found, you may already be clocked out. Or there may be an error with the css id provided.
   logout:
     'Click Menu Dropdown':
+      waitUntilInvisible: [.modal-backdrop, cssSelector, 3] # wait 3 seconds while things load after punching in/ out
       findElement: [dropdownMenu1]
       click: true
     'Click Logout':

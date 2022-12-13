@@ -29,7 +29,7 @@ class PunchTheClock extends Punchable
     public function __construct()
     {
         $this->buildConstants();
-        
+
         if (CONFIG['platform'] !== 'linux' && (CONFIG['chromeDriverExecutablePath'] === '' || CONFIG['chromeBrowserExecutablePath'] === '')) {
             throw new \Exception("When the platform is not linux, you must specify the paths to both the Chrome browser and Chromedirver executable files in the config.php file.", 1);
         }
