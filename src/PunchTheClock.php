@@ -5,20 +5,14 @@ require_once __DIR__ . '/config.php';
 
 use Facebook\WebDriver\Chrome\ChromeDriver;
 use Punch\Punchable;
-use Punch\In;
-use Punch\Out;
-use Punch\Login;
-use Punch\Logout;
 use Punch\Holiday;
 use Punch\PaidTimeOff;
 use Punch\Output;
 use Punch\Runner;
 
-use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Chrome\ChromeDriverService;
-use Facebook\WebDriver\Exception\NoSuchElementException;
 
 class PunchTheClock extends Punchable
 {
