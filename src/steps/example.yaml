@@ -1,0 +1,75 @@
+platform: linux # linux or windows
+debug: false
+port: 9515
+observedHolidays: true # when the holiday would be on a weekend and you still get the day
+maxWaitTime: 20 # seconds
+printTimeSheet: true
+chromeBrowserExecutablePath: null
+chromeDriverExecutablePath: null
+clockUrl: https://companyClockInWebsite # the path to your time clock website
+steps:
+  login:
+    'Enter Username': 
+      findElement: [txtUserName] # css id
+      sendKeys: username # username
+    'Enter Password': 
+      findElement: [txtPassword]
+      sendKeys: password # password
+    'Find Login Button': 
+      findElement: [loginIn]
+      click: true
+    'Check for Errors':
+      waitUntilLocated: ['#ValidationSummary1 ul li', cssSelector, 5] # specify that we want to use cssSelector instead of ID
+      findElements: '#ValidationSummary1 ul li'
+      checkErrors: 
+        success: # success should always be first
+          message: No Validation Errors
+        error:
+          message: 'When logging in to the time clock application there was an error:'
+    'Verify Login':
+      waitUntilLocated: [dropdownMenu1, id, 10] # default cssSelector is id, override the default time to wait
+      checkErrors:
+        success:
+          message: Login succeeded
+        error:
+          message: Something went wrong when logging in,\n
+  clockIn:
+    'Step Name':
+      findElement: [cssId]
+      click: true
+      checkErrors:
+        success: 
+          message: Success Message
+          print: true
+        error: 
+          message: Error message
+  clockOut:
+    'Step Name':
+      findElement: [cssId]
+      click: true
+      checkErrors:
+        success: 
+          message: Success Message
+          print: true
+        error: 
+          message: Error message
+  logout:
+    'Step Name':
+      waitUntilInvisible: [.class-name, cssSelector, 3] # wait 3 seconds while things load after punching in/ out
+      findElement: [cssId]
+      click: true
+    'Click Logout':
+      findElement: [logoutBtnId]
+      click: true
+holidays:
+  - New Years Day
+  - MLK Day
+  - Memorial Day
+  - Independence Day
+  - Labor Day
+  - Veterans Day
+  - Columbus Day
+  - Thanksgiving Day
+  - Christmas Day
+paidTimeOffDays:
+  - 12/25/1999

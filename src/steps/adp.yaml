@@ -1,0 +1,76 @@
+platform: linux # linux or windows
+debug: false
+port: 9515
+observedHolidays: true # when the holiday would be on a weekend and you still get the day
+maxWaitTime: 20 # seconds
+printTimeSheet: true
+chromeBrowserExecutablePath: null
+chromeDriverExecutablePath: null
+clockUrl: https://workforcenow.adp.com/public/index.html # the path to your time clock website
+steps:
+  login:
+    'Enter Username': 
+      findElement: [login-form_username] # css id
+      sendKeys: username # username
+    'Click Next': 
+      findElement: [verifUseridBtn]
+      click: true
+    'Enter Password': 
+      findElement: [login-form_password]
+      sendKeys: password # password
+    'Find Login Button': 
+      findElement: [signBtn]
+      click: true
+    'Check for Errors':
+      waitUntilLocated: ['.vdl-alert__content', cssSelector, 5] # specify that we want to use cssSelector instead of ID
+      findElements: '.vdl-alert__content'
+      checkErrors: 
+        success: # success should always be first
+          message: No Validation Errors
+        error:
+          message: 'When logging in to the time clock application there were error/s:'
+    'Verify Login':
+      waitUntilLocated: [currenttime_id, id, 10] # default cssSelector is id, override the default time to wait
+      checkErrors:
+        success:
+          message: Login succeeded
+        error:
+          message: Something went wrong when logging in,\n
+  clockIn:
+    'Clock In':
+      findElement: [.punching-button-primary, cssSelector]
+      click: true
+      checkErrors:
+        success: 
+          message: Clocked In
+          print: true
+        error: 
+          message: Error message
+  clockOut:
+    'Clock Out':
+      findElement: [punching-button-secondary, cssSelector]
+      click: true
+      checkErrors:
+        success: 
+          message: Clocked Out
+          print: true
+        error: 
+          message: Error message
+  logout:
+    'Click Avatar':
+      findElement: [sdf-avater.bg-action-primary-100, cssSelector]
+      click: true
+    'Click Logout':
+      findElement: [sdf-button.hydrated, cssSelector]
+      click: true
+holidays:
+  - New Years Day
+  - MLK Day
+  - Memorial Day
+  - Independence Day
+  - Labor Day
+  - Veterans Day
+  - Columbus Day
+  - Thanksgiving Day
+  - Christmas Day
+paidTimeOffDays:
