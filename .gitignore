@@ -1,3 +1,4 @@
 /src/config.php
 /vendor
 .phpunit.result.cache
+/src/steps/my.*.yaml

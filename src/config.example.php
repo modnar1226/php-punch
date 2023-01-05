@@ -6,4 +6,4 @@ $classLoader = new \Composer\Autoload\ClassLoader();
 $classLoader->addPsr4("Punch\\", __DIR__, true);
 $classLoader->register();
 
-define('PLAYBOOK', 'uAttend');
+define('PLAYBOOK', 'my.example');

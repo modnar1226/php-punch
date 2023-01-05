@@ -56,7 +56,7 @@ abstract class Punchable
     // validate the yaml file and parse it into a CONFIG constant
     protected function buildConstants()
     {
-        $filePath = dirname(__FILE__) . '/playbooks/' . PLAYBOOK . '.yaml';
+        $filePath = dirname(__FILE__) . '/steps/' . PLAYBOOK . '.yaml';
         $validatorPath = dirname(dirname(__FILE__)) . '/validation/ValidatePlaybook.php --format json';
         if (file_exists($filePath)) {
             ob_start();

@@ -43,8 +43,17 @@ Usage:
 # 5:00 pm Monday - Friday, script default is a 5 minute range from this time
 00 17 * * 1-5 php /path/to/punch.php 'out' >> /path/to/time_sheet.txt
 ```
+6. Change the name of the yaml file under the steps directory that match your service.
+If you make the prefix 'my.' it will be ignored by git if you intend to fork the repo
+```sh
+cp src/steps/example.yaml src/steps/my.example.yaml
+```
+7. Change the PLAYBOOK setting in the src/config.php file
+```php
+define('PLAYBOOK','my.example');
+```
 
-5. You can even create a desktop button to run the clock in sequence immediately (tested on ubuntu 18) with a .desktop file. Create a new file and add the following:
+8. You can even create a desktop button to run the clock in sequence immediately (tested on ubuntu 18) with a .desktop file. Create a new file and add the following:
 ```
 [Desktop Entry]
 Comment=Clock In and log in time sheet
@@ -55,7 +64,7 @@ Type=Application
 Name[en_US]=ClockIn
 ```
 
-6. To clock out create a new desktop file and add the following:
+9. To clock out create a new desktop file and add the following:
 ```
 [Desktop Entry]
 Comment=Clock Out and log in time sheet
